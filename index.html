@@ -706,6 +706,7 @@
        const img = document.createElement('img');
        img.src = src;
        img.alt = 'Carson Kochansky Photography';
+       if (src === 'labPhoto.png') img.style.objectPosition = 'top';
        img.addEventListener('click', () => openLightbox(src));
        grid.appendChild(img);
      });
