@@ -1,0 +1,741 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>Carson Kochansky</title>
+ <!-- iOS home screen icon -->
+ <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+ <!-- optional retina-specific icons -->
+ <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png" />
+ <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+ <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+ <style>
+   :root {
+     --bg: #f7efe6;
+     --panel: #efe6db;
+     --accent: #8b5e3c;
+     --muted: #6b5846;
+     --text: #2b241f;
+     --heading-font: 'Playfair Display', serif;
+     --body-font: 'Inter', system-ui, -apple-system, sans-serif;
+   }
+   * { box-sizing: border-box; margin: 0; padding: 0; }
+   html { scroll-behavior: smooth; }
+   body { font-family: var(--body-font); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+
+
+   /* NAV */
+   header { position: fixed; left: 0; right: 0; top: 0; z-index: 40; background: rgba(247,239,230,0.92); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(0,0,0,0.06); }
+   .container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+   nav { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+   .brand { font-family: var(--heading-font); font-weight: 700; color: var(--accent); font-size: 1.1rem; text-decoration: none; }
+   .nav-links { display: flex; gap: 1.5rem; }
+   .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+   .nav-links a:hover { color: var(--accent); }
+
+
+   /* HERO */
+   .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 80px 1.5rem 3rem; background: linear-gradient(160deg, var(--bg) 60%, var(--panel)); }
+   .hero-inner { max-width: 700px; }
+   .hero-tag { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+   .hero h1 { font-family: var(--heading-font); font-size: clamp(2.6rem, 7vw, 4.5rem); line-height: 1.1; color: var(--text); margin-bottom: 1.2rem; }
+   .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 520px; margin: 0 auto 2rem; }
+   .hero-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 2rem; }
+   .pill { background: var(--panel); border: 1px solid rgba(139,94,60,0.15); color: var(--accent); font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.9rem; border-radius: 999px; }
+   .cta-row { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+   .btn { padding: 0.65rem 1.4rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+   .btn-primary { background: var(--accent); color: #fff; }
+   .btn-primary:hover { background: #7a5234; }
+   .btn-ghost { border: 1.5px solid var(--accent); color: var(--accent); }
+   .btn-ghost:hover { background: var(--accent); color: #fff; }
+
+
+   /* SECTIONS */
+   section { padding: 5rem 1.5rem; }
+   section:nth-child(even) { background: var(--panel); }
+   .section-inner { max-width: 1000px; margin: 0 auto; }
+   .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+   .section-title { font-family: var(--heading-font); font-size: clamp(1.6rem, 4vw, 2.3rem); color: var(--text); margin-bottom: 2.5rem; }
+
+
+   /* RESUME */
+   .resume-embed { width: 100%; height: 900px; border: none; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+
+
+   /* ABOUT */
+   .about-grid { display: grid; grid-template-columns: auto 1fr 1fr; gap: 2.5rem; align-items: start; }
+   .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 0.97rem; }
+   .headshot-wrap { display: flex; justify-content: center; }
+   .headshot-wrap img { width: 220px; height: 260px; object-fit: cover; object-position: center top; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+   .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+   .stat-card { background: var(--bg); border-radius: 10px; padding: 1.25rem; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
+   .stat-card .num { font-family: var(--heading-font); font-size: 2rem; color: var(--accent); font-weight: 700; }
+   .stat-card .lbl { font-size: 0.78rem; color: var(--muted); font-weight: 500; margin-top: 0.2rem; }
+
+
+   /* EDUCATION */
+   .edu-list { display: flex; flex-direction: column; gap: 1.5rem; }
+   .edu-card { background: var(--bg); border-radius: 10px; padding: 1.5rem 1.75rem; border-left: 4px solid var(--accent); }
+   .edu-card .school { font-weight: 700; font-size: 1.05rem; color: var(--text); }
+   .edu-card .degree { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-top: 0.15rem; }
+   .edu-card .meta { font-size: 0.82rem; color: var(--muted); margin-top: 0.25rem; margin-bottom: 0.75rem; }
+   .edu-card ul { padding-left: 1.2rem; }
+   .edu-card li { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.3rem; }
+   .independent-study { background: var(--bg); border-radius: 10px; padding: 1.5rem 1.75rem; border-left: 4px solid var(--muted); }
+   .independent-study .school { font-weight: 700; font-size: 1.05rem; color: var(--text); }
+   .independent-study .meta { font-size: 0.82rem; color: var(--muted); margin-top: 0.25rem; margin-bottom: 0.75rem; }
+   .independent-study ul { padding-left: 1.2rem; }
+   .independent-study li { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.3rem; }
+
+
+   /* EXPERIENCE */
+   .exp-list { display: flex; flex-direction: column; gap: 1.5rem; }
+   .exp-card { background: var(--bg); border-radius: 10px; padding: 1.5rem 1.75rem; }
+   .exp-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+   .exp-title { font-weight: 700; font-size: 1rem; color: var(--text); }
+   .exp-org { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
+   .exp-date { font-size: 0.78rem; color: var(--muted); white-space: nowrap; font-weight: 500; }
+   .exp-card ul { padding-left: 1.2rem; }
+   .exp-card li { font-size: 0.87rem; color: var(--muted); margin-bottom: 0.3rem; }
+
+
+   /* AWARDS */
+   .awards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+   .award-card { background: var(--bg); border-radius: 10px; padding: 1.25rem 1.4rem; display: flex; align-items: flex-start; gap: 0.85rem; }
+   .award-icon { font-size: 1.4rem; flex-shrink: 0; }
+   .award-card .award-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+   .award-card .award-year { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+
+
+   /* SKILLS */
+   .skills-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+   .skill-group h3 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.85rem; }
+   .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+   .tag { background: var(--panel); border: 1px solid rgba(0,0,0,0.06); color: var(--text); font-size: 0.82rem; font-weight: 500; padding: 0.35rem 0.85rem; border-radius: 6px; }
+
+
+   /* PHOTOGRAPHY */
+   .photo-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-bottom: 3rem; align-items: start; }
+   .photo-intro-text p { color: var(--muted); font-size: 0.97rem; margin-bottom: 1rem; }
+   .photo-credits { display: flex; flex-direction: column; gap: 1rem; }
+   .photo-credit-card { background: var(--bg); border-radius: 10px; padding: 1.25rem 1.4rem; border-left: 4px solid var(--accent); }
+   .photo-credit-card .pc-title { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+   .photo-credit-card .pc-sub { font-size: 0.83rem; color: var(--accent); font-weight: 600; margin-top: 0.15rem; }
+   .photo-credit-card .pc-desc { font-size: 0.83rem; color: var(--muted); margin-top: 0.4rem; }
+
+
+   /* GALLERY */
+   .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+   .gallery-grid img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; display: block; transition: transform 0.25s, box-shadow 0.25s; cursor: pointer; }
+   .gallery-grid img:hover { transform: scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+   .gallery-placeholder { width: 100%; height: 220px; border-radius: 8px; background: var(--panel); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 0.8rem; border: 2px dashed rgba(139,94,60,0.2); }
+   .gallery-cta { text-align: center; margin-top: 2rem; }
+
+
+   /* LIGHTBOX */
+   .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100; align-items: center; justify-content: center; }
+   .lightbox.open { display: flex; }
+   .lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 6px; object-fit: contain; }
+   .lightbox-close { position: absolute; top: 1.2rem; right: 1.5rem; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; background: none; border: none; }
+
+
+   /* CONTACT */
+   .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+   .contact-card { background: var(--panel); border-radius: 10px; padding: 1.25rem 1.4rem; text-align: center; }
+   .contact-card .c-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.4rem; }
+   .contact-card a, .contact-card span { font-size: 0.9rem; color: var(--text); text-decoration: none; font-weight: 500; }
+   .contact-card a:hover { color: var(--accent); }
+
+
+   /* FOOTER */
+   footer { padding: 2rem 1.5rem; text-align: center; border-top: 1px solid rgba(0,0,0,0.06); background: var(--bg); }
+   footer p { font-size: 0.82rem; color: var(--muted); }
+
+
+   /* RESPONSIVE */
+   @media (max-width: 700px) {
+     .nav-links { display: none; }
+     .about-grid { grid-template-columns: 1fr; }
+     .headshot-wrap img { width: 100%; height: 280px; }
+     .skills-row { grid-template-columns: 1fr; }
+     .photo-intro { grid-template-columns: 1fr; }
+     .exp-date { text-align: left; }
+   }
+ </style>
+</head>
+<body>
+
+
+ <header>
+   <div class="container">
+     <nav>
+       <a class="brand" href="#home">Carson Kochansky</a>
+       <div class="nav-links">
+         <a href="#resume">Resume</a>
+         <a href="#about">About</a>
+         <a href="#education">Education</a>
+         <a href="#experience">Experience</a>
+         <a href="#awards">Awards</a>
+         <a href="#photography">Photography</a>
+         <a href="#skills">Skills</a>
+         <a href="#contact">Contact</a>
+         <a href="https://linkedin.com/in/carson-kochansky-6babaa372" target="_blank">LinkedIn</a>
+       </div>
+     </nav>
+   </div>
+ </header>
+
+
+ <main>
+
+
+   <!-- HERO -->
+   <section id="home" class="hero">
+     <div class="hero-inner">
+       <div class="hero-tag">Bronxville, NY &mdash; Class of 2026</div>
+       <h1>Carson Kochansky</h1>
+       <p class="hero-sub">Student researcher, Nasa GeneLab Intern, athlete, photographer, and aspiring scientist &mdash; admitted to Dartmouth College, Class of 2030.</p>
+       <div class="hero-pills">
+         <span class="pill">NASA GeneLab Intern</span>
+         <span class="pill">NYU Langone Intern</span>
+         <span class="pill">GPA 4.1 &bull; ACT 35</span>
+         <span class="pill">Dartmouth &rsquo;30</span>
+         <span class="pill">Varsity Athlete</span>
+         <span class="pill">Photographer</span>
+         <span class="pill">Film Production</span>
+       </div>
+       <div class="cta-row">
+         <a href="#experience" class="btn btn-primary">View Experience</a>
+         <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+       </div>
+     </div>
+   </section>
+
+
+   <!-- ABOUT -->
+   <section id="about">
+     <div class="section-inner">
+       <div class="section-label">About</div>
+       <h2 class="section-title">A little about me</h2>
+       <div class="about-grid">
+         <div style="display:flex; flex-direction:column; gap:1.5rem;">
+           <div class="headshot-wrap">
+             <img src="download.png" alt="Carson Kochansky" />
+           </div>
+         </div>
+         <div class="about-text">
+           <p>I'm a senior at Bronxville High School with a passion for science, research, and athletics. My academic interests span space biology, genetics, quantum mechanics, psychology, and artificial intelligence &mdash; and I love finding the connections between them.</p>
+           <p>This past year I had the incredible opportunity to intern at NASA's Ames Research Center through the GL4HS program, analyzing RNA sequencing data from space-flown organisms. I also shadowed cancer research at NYU Langone's Tisch Hospital.</p>
+           <p>Outside the lab and classroom, I'm a varsity soccer player and track athlete, president of both the Astronomy and Chess clubs, a volunteer English teacher with TASSEL in Cambodia, and a photographer whose work has appeared in local newspapers.</p>
+           <p>I'll be attending Dartmouth College in the fall of 2026 as part of the Class of 2030.</p>
+         </div>
+         <div class="stats-grid">
+           <div class="stat-card">
+             <div class="num">4.1</div>
+             <div class="lbl">GPA</div>
+           </div>
+           <div class="stat-card">
+             <div class="num">35</div>
+             <div class="lbl">ACT Score</div>
+           </div>
+           <div class="stat-card">
+             <div class="num">5+</div>
+             <div class="lbl">Years of Leadership</div>
+           </div>
+           <div class="stat-card">
+             <div class="num">&rsquo;30</div>
+             <div class="lbl">Dartmouth Class</div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+
+
+   <!-- EDUCATION -->
+   <section id="education">
+     <div class="section-inner">
+       <div class="section-label">Education</div>
+       <h2 class="section-title">Academic background</h2>
+       <div class="edu-list">
+
+
+         <div class="edu-card">
+           <div class="school">Dartmouth College &mdash; Hanover, NH</div>
+           <div class="degree">Admitted to Class of 2030</div>
+         </div>
+
+
+         <div class="edu-card">
+           <div class="school">Bronxville High School &mdash; Bronxville, NY</div>
+           <div class="degree">Senior &bull; GPA: 4.1 &bull; ACT: 35/36</div>
+           <div class="meta">Graduation: May 2026</div>
+           <ul>
+             <li>Rensselaer Polytechnic Institute Medal Award for Mathematics and Science &mdash; $40,000/year merit scholarship (2025)</li>
+             <li>The Bronxville High School Mathematics and Science Award (2025)</li>
+             <li>AP Scholar with Distinction (2025)</li>
+             <li>Bronxville High School Award For Innovation (2024)</li>
+             <li>National Recognition Program School Recognition Award (2025)</li>
+           </ul>
+         </div>
+
+
+         <div class="independent-study">
+           <div class="school">Independent Studies &mdash; Bronxville High School</div>
+           <div class="meta">September 2023 &ndash; Present</div>
+           <ul>
+             <li><strong>Introduction to Quantum Mechanics and Implications of Special and General Relativity</strong> (Sept 2023 &ndash; June 2024): wrote four literature review papers on general relativity and quantum mechanics, including time dilation and wave-particle duality.</li>
+             <li><strong>Motivation &amp; Violent Crimes</strong> (Sept 2024 &ndash; June 2025): conducted research through case studies, culminating in a year-end presentation.</li>
+             <li><strong>AI Scholars Program</strong> (Sept 2025 &ndash; Present): weekly AI and coding class taught by MIT, Caltech, and Stanford alumni.</li>
+           </ul>
+         </div>
+
+
+       </div>
+     </div>
+   </section>
+
+
+   <!-- EXPERIENCE -->
+   <section id="experience">
+     <div class="section-inner">
+       <div class="section-label">Experience</div>
+       <h2 class="section-title">Work &amp; activities</h2>
+       <div class="exp-list">
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">Student Intern</div>
+               <div class="exp-org">NASA GeneLab for High Schools (GL4HS), NASA Ames Research Center</div>
+             </div>
+             <div class="exp-date">June 2025 &ndash; Present</div>
+           </div>
+           <ul>
+             <li>Analyzed omics datasets using the Open Science Data Repository; received sequenced RNA from organisms to study effects of microgravity and space radiation.</li>
+             <li>Capstone: analyzed OSD-686 on mouse liver spaceflight and differential gene expression; investigated sulfur metabolism and pathway analysis under microgravity and radiation stressors.</li>
+             <li>Invited to submit a full research proposal (~5% acceptance) following team presentation on Spaceflight-Induced Hepatic Dysfunction; top groups selected for funded ASGSR conference (December 2025).</li>
+           </ul>
+         </div>
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">Summer Intern</div>
+               <div class="exp-org">NYU Langone Tisch Hospital &mdash; Gonda Lab</div>
+             </div>
+             <div class="exp-date">July 2025 &ndash; August 2025</div>
+           </div>
+           <ul>
+             <li>Shadowed research on biomarkers in pancreatic cancer; observed treatments on mice, cell cultures, and organoids.</li>
+             <li>Observed Dr. Tamas Gonda in clinic and operating room (primarily endoscopies).</li>
+           </ul>
+         </div>
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">President</div>
+               <div class="exp-org">Astronomy Club, Bronxville High School</div>
+             </div>
+             <div class="exp-date">September 2021 &ndash; Present</div>
+           </div>
+           <ul>
+             <li>Create lesson plans for weekly meetings covering recent discoveries, interactive activities, and discussions.</li>
+             <li>Organized school-wide eclipse-viewing event, telescope nights, and trips to relevant museums.</li>
+           </ul>
+         </div>
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">Co-Captain &mdash; Varsity &amp; Club Soccer</div>
+               <div class="exp-org">Bronxville High School &amp; World Class Football Club, Orangeburg, NY</div>
+             </div>
+             <div class="exp-date">September 2021 &ndash; Present</div>
+           </div>
+           <ul>
+             <li>4-year starter on Bronxville Girls Varsity Soccer; takes on leadership roles and mentors younger players.</li>
+             <li>Team state rank: 2nd (2024). Personal awards: NY State All League athlete (2x), All-State Sportsmanship Award.</li>
+           </ul>
+         </div>
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">Restaurant Hostess</div>
+               <div class="exp-org">La Casa Bronxville Restaurant, New York, NY (Michelin Guide Recognized)</div>
+             </div>
+             <div class="exp-date">June 2024 &ndash; Present</div>
+           </div>
+           <ul>
+             <li>Developed organization, communication, and teamwork skills in a fast-paced, Michelin Guide recognized environment.</li>
+           </ul>
+         </div>
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">Varsity Track &amp; Field</div>
+               <div class="exp-org">Bronxville High School</div>
+             </div>
+             <div class="exp-date">November 2021 &ndash; Present</div>
+           </div>
+           <ul>
+             <li>Competed in Nike Indoor Nationals and New Balance Outdoor Nationals as a Winter and Spring Track athlete.</li>
+             <li>Personal awards: NY State All League athlete (2x), NY State All Section athlete.</li>
+           </ul>
+         </div>
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">President</div>
+               <div class="exp-org">Chess Club, Bronxville High School</div>
+             </div>
+             <div class="exp-date">September 2021 &ndash; Present</div>
+           </div>
+           <ul>
+             <li>Plan and organize meetings with lesson plans and school-wide tournaments.</li>
+           </ul>
+         </div>
+
+
+       </div>
+     </div>
+   </section>
+
+
+   <!-- COMMUNITY SERVICE -->
+   <section>
+     <div class="section-inner">
+       <div class="section-label">Community Service</div>
+       <h2 class="section-title">Giving back</h2>
+       <div class="exp-list">
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">President &amp; Teacher</div>
+               <div class="exp-org">TASSEL (Teaching And Sharing Skills to Enrich Lives)</div>
+             </div>
+             <div class="exp-date">September 2021 &ndash; Present</div>
+           </div>
+           <ul>
+             <li>International organization teaching English, job skills, and providing resources for families in rural Cambodia.</li>
+             <li>Run the Bronxville chapter; part of the official TASSEL media team producing a biannual newsletter.</li>
+             <li>Create lesson plans and teach English to students aged 7&ndash;17 via the VSEE online platform.</li>
+           </ul>
+         </div>
+
+
+         <div class="exp-card">
+           <div class="exp-header">
+             <div>
+               <div class="exp-title">Official Photographer</div>
+               <div class="exp-org">Bronxville School Foundation</div>
+             </div>
+             <div class="exp-date">November 2024 &ndash; Present</div>
+           </div>
+           <ul>
+             <li>Photograph sports events, Foundation-supported activities, and grant ceremonies.</li>
+             <li>Photos featured in local newspapers and the Foundation's website.</li>
+           </ul>
+         </div>
+
+
+       </div>
+     </div>
+   </section>
+
+
+   <!-- PHOTOGRAPHY -->
+   <section id="photography">
+     <div class="section-inner">
+       <div class="section-label">Photography &amp; Film</div>
+       <h2 class="section-title">Behind the lens</h2>
+       <div class="photo-intro">
+         <div class="photo-intro-text">
+           <p>Photography has been a creative outlet and professional pursuit throughout high school. My work spans landscape, portrait, and sports photography &mdash; with a focus on capturing authentic, unscripted moments.</p>
+           <p>In addition to still photography, I've worked behind the scenes on narrative film productions alongside NYU students, gaining hands-on experience in both production and on-set photography.</p>
+           <p>My photography website and Instagram showcase selected work across all genres.</p>
+           <div style="margin-top:1.25rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+             <a href="https://www.carsonkochanskyphotography.com/" target="_blank" class="btn btn-primary" style="font-size:0.82rem; padding:0.5rem 1.1rem;">Visit Photography Site</a>
+             <a href="https://instagram.com/carsonkochanskyphotography" target="_blank" class="btn btn-ghost" style="font-size:0.82rem; padding:0.5rem 1.1rem;">@carsonkochanskyphotography</a>
+           </div>
+         </div>
+         <div class="photo-credits">
+           <div class="photo-credit-card">
+             <div class="pc-title">Official Photographer</div>
+             <div class="pc-sub">Bronxville School Foundation</div>
+             <div class="pc-desc">Cover sports events, Foundation-supported activities, and grant ceremonies. Photos featured in local newspapers and the Foundation's website. November 2024 &ndash; Present</div>
+           </div>
+           <div class="photo-credit-card">
+             <div class="pc-title">Behind-the-Scenes Photographer &amp; Production Assistant</div>
+             <div class="pc-sub">NYU Student Film Productions</div>
+             <div class="pc-desc">Worked behind the scenes on narrative film sets with NYU students &mdash; capturing production stills and assisting with on-set logistics and production needs.</div>
+           </div>
+           <div class="photo-credit-card">
+             <div class="pc-title">Landscape, Portrait &amp; Sports Photography</div>
+             <div class="pc-sub">Independent &mdash; carsonkochanskyphotography.com</div>
+             <div class="pc-desc">Personal photography practice across multiple genres, edited in Adobe Lightroom and published on personal website and Instagram.</div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+
+
+   <!-- PHOTO GALLERY -->
+   <section id="gallery">
+     <div class="section-inner">
+       <div class="section-label">Gallery</div>
+       <h2 class="section-title">Photos of me working</h2>
+       <div class="gallery-grid" id="galleryGrid">
+         <!-- Photos are loaded from the images/gallery/ folder via JS below.
+              Add your images to images/gallery/ and list them in the GALLERY_IMAGES array in the script. -->
+       </div>
+       <div class="gallery-cta">
+         <a href="https://www.carsonkochanskyphotography.com/" target="_blank" class="btn btn-ghost" style="font-size:0.85rem;">See Full Portfolio</a>
+       </div>
+     </div>
+   </section>
+
+
+   <!-- LIGHTBOX -->
+   <div class="lightbox" id="lightbox">
+     <button class="lightbox-close" id="lightboxClose">&times;</button>
+     <img id="lightboxImg" src="" alt="Photo" />
+   </div>
+
+
+   <!-- AWARDS -->
+   <section id="awards">
+     <div class="section-inner">
+       <div class="section-label">Recognition</div>
+       <h2 class="section-title">Awards &amp; honors</h2>
+       <div class="awards-grid">
+         <div class="award-card">
+           <div class="award-icon">🏅</div>
+           <div>
+             <div class="award-name">RPI Medal Award &mdash; Math &amp; Science</div>
+             <div class="award-year">$40,000/year merit scholarship &bull; 2025</div>
+           </div>
+         </div>
+         <div class="award-card">
+           <div class="award-icon">🏆</div>
+           <div>
+             <div class="award-name">BHS Mathematics and Science Award</div>
+             <div class="award-year">2025</div>
+           </div>
+         </div>
+         <div class="award-card">
+           <div class="award-icon">📚</div>
+           <div>
+             <div class="award-name">AP Scholar with Distinction</div>
+             <div class="award-year">2025</div>
+           </div>
+         </div>
+         <div class="award-card">
+           <div class="award-icon">💡</div>
+           <div>
+             <div class="award-name">BHS Award For Innovation</div>
+             <div class="award-year">2024</div>
+           </div>
+         </div>
+         <div class="award-card">
+           <div class="award-icon">🌟</div>
+           <div>
+             <div class="award-name">National Recognition Program School Recognition Award</div>
+             <div class="award-year">2025</div>
+           </div>
+         </div>
+         <div class="award-card">
+           <div class="award-icon">⚽</div>
+           <div>
+             <div class="award-name">NY State All League &amp; All-State Sportsmanship</div>
+             <div class="award-year">Soccer &bull; Multiple years</div>
+           </div>
+         </div>
+         <div class="award-card">
+           <div class="award-icon">🏃</div>
+           <div>
+             <div class="award-name">NY State All League &amp; All Section Athlete</div>
+             <div class="award-year">Track &amp; Field &bull; Multiple years</div>
+           </div>
+         </div>
+         <div class="award-card">
+           <div class="award-icon">🔬</div>
+           <div>
+             <div class="award-name">NASA GL4HS Research Proposal Invite</div>
+             <div class="award-year">~5% acceptance &bull; ASGSR Conference 2025</div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+
+
+   <!-- SKILLS -->
+   <section id="skills">
+     <div class="section-inner">
+       <div class="section-label">Skills &amp; Interests</div>
+       <h2 class="section-title">What I bring &amp; love</h2>
+       <div class="skills-row">
+         <div class="skill-group">
+           <h3>Skills</h3>
+           <div class="tag-cloud">
+             <span class="tag">Python</span>
+             <span class="tag">Java</span>
+             <span class="tag">Bioinformatic Analysis</span>
+             <span class="tag">Photography</span>
+             <span class="tag">Adobe Lightroom</span>
+             <span class="tag">French</span>
+             <span class="tag">RNA Sequencing</span>
+             <span class="tag">DGEA</span>
+             <span class="tag">Research &amp; Writing</span>
+             <span class="tag">Production Assisting</span>
+             <span class="tag">On-Set Photography</span>
+           </div>
+         </div>
+         <div class="skill-group">
+           <h3>Interests</h3>
+           <div class="tag-cloud">
+             <span class="tag">Medical Research</span>
+             <span class="tag">Astronomy</span>
+             <span class="tag">Biology</span>
+             <span class="tag">Genetics</span>
+             <span class="tag">Neuroscience</span>
+             <span class="tag">Psychology</span>
+             <span class="tag">Soccer</span>
+             <span class="tag">Running</span>
+             <span class="tag">Film</span>
+             <span class="tag">Artificial Intelligence</span>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+
+
+   <!-- RESUME -->
+   <section id="resume">
+     <div class="section-inner">
+       <div class="section-label">Resume</div>
+       <h2 class="section-title">My Resume</h2>
+       <embed src="resume.pdf" type="application/pdf" class="resume-embed" />
+     </div>
+   </section>
+
+
+   <!-- CONTACT -->
+   <section id="contact">
+     <div class="section-inner">
+       <div class="section-label">Contact</div>
+       <h2 class="section-title">Get in touch</h2>
+       <div class="contact-grid">
+         <div class="contact-card">
+           <div class="c-label">Email</div>
+           <a href="mailto:carsonkochansky@gmail.com">carsonkochansky@gmail.com</a>
+         </div>
+         <div class="contact-card">
+           <div class="c-label">Phone</div>
+           <a href="tel:3479786259">(347) 978-6259</a>
+         </div>
+         <div class="contact-card">
+           <div class="c-label">Photography</div>
+           <a href="https://www.carsonkochanskyphotography.com/" target="_blank">carsonkochanskyphotography.com</a>
+         </div>
+         <div class="contact-card">
+           <div class="c-label">Instagram</div>
+           <a href="https://instagram.com/carsonkochanskyphotography" target="_blank">@carsonkochanskyphotography</a>
+         </div>
+         <div class="contact-card">
+           <div class="c-label">LinkedIn</div>
+           <a href="https://linkedin.com/in/carson-kochansky-6babaa372" target="_blank">carson-kochansky</a>
+         </div>
+       </div>
+     </div>
+   </section>
+
+
+ </main>
+
+
+ <footer>
+   <div class="container">
+     <p>&copy; <span id="year"></span> Carson Kochansky</p>
+   </div>
+ </footer>
+
+
+ <script>
+   document.getElementById('year').textContent = new Date().getFullYear();
+
+
+   // ── Gallery ──────────────────────────────────────────────────────────────
+   // Add your image filenames here. Place photos in images/gallery/
+   const GALLERY_IMAGES = [
+     'headshot.jpeg',
+     'gallery.jpeg',
+   ];
+
+
+   const grid = document.getElementById('galleryGrid');
+
+
+   if (GALLERY_IMAGES.length === 0) {
+     // Show tasteful placeholder slots until real photos are added
+     for (let i = 0; i < 6; i++) {
+       const ph = document.createElement('div');
+       ph.className = 'gallery-placeholder';
+       ph.textContent = 'Photo coming soon';
+       grid.appendChild(ph);
+     }
+   } else {
+     GALLERY_IMAGES.forEach(src => {
+       const img = document.createElement('img');
+       img.src = src;
+       img.alt = 'Carson Kochansky Photography';
+       img.addEventListener('click', () => openLightbox(src));
+       grid.appendChild(img);
+     });
+   }
+
+
+   // ── Lightbox ─────────────────────────────────────────────────────────────
+   const lightbox = document.getElementById('lightbox');
+   const lightboxImg = document.getElementById('lightboxImg');
+
+
+   function openLightbox(src) {
+     lightboxImg.src = src;
+     lightbox.classList.add('open');
+     document.body.style.overflow = 'hidden';
+   }
+
+
+   function closeLightbox() {
+     lightbox.classList.remove('open');
+     document.body.style.overflow = '';
+   }
+
+
+   document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+   lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+ </script>
+</body>
+</html>
+
