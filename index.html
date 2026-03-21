@@ -131,7 +131,7 @@
 
    /* LIGHTBOX */
    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 100; align-items: center; justify-content: center; }
-   .lightbox.open { display: flex; }
+   .lightbox.open { display: flex; flex-direction: column; }
    .lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 6px; object-fit: contain; }
    .lightbox-close { position: absolute; top: 1.2rem; right: 1.5rem; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; background: none; border: none; }
 
@@ -512,6 +512,7 @@
    <div class="lightbox" id="lightbox">
      <button class="lightbox-close" id="lightboxClose">&times;</button>
      <img id="lightboxImg" src="" alt="Photo" />
+     <p id="lightboxCaption" style="color:#fff; text-align:center; margin-top:0.75rem; font-size:0.95rem; max-width:80vw;"></p>
    </div>
 
 
@@ -718,8 +719,18 @@
    const lightboxImg = document.getElementById('lightboxImg');
 
 
+   const CAPTIONS = {
+     'gallery.jpeg':   'NASA GL4HS at American Society for Gravitational and Space Research conference in Phoenix, Arizona',
+     'coverPhoto.png': 'Rodent ultrasound in Gonda Lab',
+     'headshot.jpeg':  'NASA GL4HS @ ASGSR',
+     'labPhoto.png':   'First day in Lab!',
+     'VseePhoto.png':  'Teaching English classes online with Tassel',
+   };
+
+
    function openLightbox(src) {
      lightboxImg.src = src;
+     document.getElementById('lightboxCaption').textContent = CAPTIONS[src] || '';
      lightbox.classList.add('open');
      document.body.style.overflow = 'hidden';
    }
